@@ -5,6 +5,8 @@
 .tox/
 dist/
 build/
+old/
 .coverage
 *.pyc*
 *.egg*
+test.py
