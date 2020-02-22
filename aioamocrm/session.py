@@ -1,12 +1,12 @@
 import json
 from typing import Union
 from datetime import timedelta, datetime
-from pprint import pprint
 
 from httpx import Client
 
 from .exceptions import AmoAuthError, AmoPageNotFoundError, AmoInternalError, AmoBadRequest, AmoUnknownError
-from .utils import AmoJSONEncoder
+
+__all__ = ['Session', 'SESSION_LIFETIME']
 
 SESSION_LIFETIME = timedelta(minutes=15)
 

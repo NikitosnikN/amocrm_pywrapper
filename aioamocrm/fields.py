@@ -1,71 +1,75 @@
 from typing import List, Union
 
-from .base import _BaseField
+from .base import BaseField
+
+__all__ = ['TextField', 'NumericField', 'CheckBoxField', 'SelectField', 'MultiSelectField', 'DateField', 'UrlField',
+           'MultiTextField', 'TextAreaField', 'RadioButtonField', 'StreetAddressField', 'SmartAddressField', 
+           'BirthdayField', 'LegalEntityField', 'ItemsField', 'CustomField']
 
 
-class TextField(_BaseField):
+class TextField(BaseField):
     _type: int = 1
 
 
-class NumericField(_BaseField):
+class NumericField(BaseField):
     _type: int = 2
 
 
-class CheckBoxField(_BaseField):
+class CheckBoxField(BaseField):
     _type: int = 3
 
 
-class SelectField(_BaseField):
+class SelectField(BaseField):
     _type: int = 4
     _enum: List[str] = None
 
 
-class MultiSelectField(_BaseField):
+class MultiSelectField(BaseField):
     _type: int = 5
     _enum: List[str] = None
 
 
-class DateField(_BaseField):
+class DateField(BaseField):
     _type: int = 6
 
 
-class UrlField(_BaseField):
+class UrlField(BaseField):
     _type: int = 7
 
 
-class MultiTextField(_BaseField):
+class MultiTextField(BaseField):
     _type: int = 8
 
 
-class TextAreaField(_BaseField):
+class TextAreaField(BaseField):
     _type: int = 9
 
 
-class RadioButtonField(_BaseField):
+class RadioButtonField(BaseField):
     _type: int = 10
 
 
-class StreetAddressField(_BaseField):
+class StreetAddressField(BaseField):
     _type: int = 11
 
 
-class SmartAddressField(_BaseField):
+class SmartAddressField(BaseField):
     _type: int = 12
 
 
-class BirthdayField(_BaseField):
+class BirthdayField(BaseField):
     _type: int = 13
 
 
-class LegalEntityField(_BaseField):
+class LegalEntityField(BaseField):
     _type: int = 14
 
 
-class ItemsField(_BaseField):
+class ItemsField(BaseField):
     _type: int = 15
 
 
-class CustomField(_BaseField):
+class CustomField(BaseField):
     _values: Union[list, int, str] = None
     _enum: List[str] = None
 

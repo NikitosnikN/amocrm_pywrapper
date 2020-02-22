@@ -1,10 +1,10 @@
-__all__ = ['Account', 'Lead', 'Contact', 'Company', 'Customers', 'Tasks', 'Notes', 'Pipeline']
-
 from typing import List
 from datetime import datetime
 
 from .base import BaseModel
 from .mixins import DateTimeModelMixin, ElementModelMixin, ColorMixin
+
+__all__ = ['Account', 'Lead', 'Contact', 'Company', 'Customer', 'Task', 'Note', 'Pipeline']
 
 
 class Account(BaseModel):
@@ -119,7 +119,7 @@ class Lead(BaseModel, DateTimeModelMixin):
                 setattr(self, f'_{key}', val) if hasattr(self, f'_{key}') else None
 
 
-class Customers(BaseModel):
+class Customer(BaseModel):
     _responsible_user_id: int = None
     _created_by: int = None
     _next_date: datetime = None
@@ -132,7 +132,7 @@ class Customers(BaseModel):
     _catalog_elements_id: dict = None
 
 
-class Tasks(BaseModel, DateTimeModelMixin, ElementModelMixin):
+class Task(BaseModel, DateTimeModelMixin, ElementModelMixin):
     _responsible_user_id: int = None
     _created_by: int = None
     _complete_till_at: datetime = None
@@ -140,7 +140,7 @@ class Tasks(BaseModel, DateTimeModelMixin, ElementModelMixin):
     _text: str = None
 
 
-class Notes(BaseModel):
+class Note(BaseModel):
     _note_type: int = None
     _responsible_user_id: int = None
     _created_by: int = None

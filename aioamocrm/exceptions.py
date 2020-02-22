@@ -1,7 +1,7 @@
+from .base import _BaseException
+
 __all__ = ['AmoAuthError', 'AmoPageNotFoundError', 'AmoInternalError', 'AmoObjectNotFoundError', 'AmoBadRequest',
            'AmoUnknownError']
-
-from .base import _BaseException
 
 
 class AmoAuthError(_BaseException):

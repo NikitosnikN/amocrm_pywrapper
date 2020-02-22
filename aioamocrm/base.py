@@ -3,6 +3,8 @@ from typing import Union, Any
 from .mixins import ElementModelMixin
 from .utils import get_embedded_items
 
+__all__ = ['BaseModel', 'BaseManager', 'BaseField', '_BaseException']
+
 
 class BaseModel(object):
     _id: int = None
@@ -18,6 +20,9 @@ class BaseModel(object):
 
     def __repr__(self):
         return self.__class__.__name__
+
+    def __setattr__(self, name, value):
+        setattr(self, f"_{name}", value) if hasattr(self, f"_{name}") else super().__setattr__(name, value)
 
     def __parse_from__(self, **kwargs):
         for key, val in kwargs.items():
@@ -100,7 +105,7 @@ class BaseManager(object):
         )
 
 
-class _BaseField(BaseModel, ElementModelMixin):
+class BaseField(BaseModel, ElementModelMixin):
     _type: int = None
     _origin: str = None
     _is_editable: bool = None

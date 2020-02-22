@@ -1,13 +1,12 @@
-__all__ = ['AccountManager', 'LeadManager', 'PipelineManager', 'CompanyManager', 'ContactManager', 'CustomersManager',
-           'TasksManager', 'NotesManager']
-
-from typing import Union
 import json
-from pprint import pprint
+from typing import Union
 
 from .base import BaseManager
 from .models import *
 from .utils import AmoJSONEncoder
+
+__all__ = ['AccountManager', 'LeadManager', 'PipelineManager', 'CompanyManager', 'ContactManager', 'CustomerManager',
+           'TaskManager', 'NoteManager']
 
 
 class AccountManager(BaseManager):
@@ -78,21 +77,21 @@ class CompanyManager(BaseManager):
         return super().fetch_all(payload)
 
 
-class CustomersManager(BaseManager):
+class CustomerManager(BaseManager):
     model_name = 'customers'
 
     def fetch_all(self, payload: dict = None) -> Union[dict, None]:
         return super().fetch_all(payload)
 
 
-class TasksManager(BaseManager):
+class TaskManager(BaseManager):
     model_name = 'tasks'
 
     def fetch_all(self, payload: dict = None) -> Union[dict, None]:
         return super().fetch_all(payload)
 
 
-class NotesManager(BaseManager):
+class NoteManager(BaseManager):
     model_name = 'notes'
 
     def fetch_all(self, payload: dict = None) -> Union[dict, None]:

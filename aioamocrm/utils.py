@@ -1,7 +1,7 @@
-__all__ = ['AmoJSONEncoder', 'get_embedded_items']
-
 from typing import Union
 from json import JSONEncoder
+
+__all__ = ['AmoJSONEncoder', 'get_embedded_items']
 
 
 # TODO improve class serialization
