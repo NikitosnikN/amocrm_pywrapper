@@ -82,6 +82,8 @@ class Session:
                 raise AmoForbidden
             elif resp.status_code == 404:
                 raise AmoPageNotFoundError
+            elif resp.status_code == 429:
+                raise AmoTooManyRequests
             elif resp.status_code == 500:
                 raise AmoInternalError
             else:

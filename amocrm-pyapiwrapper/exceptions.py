@@ -1,7 +1,7 @@
 from .base import _BaseException
 
 __all__ = ['AmoAuthError', 'AmoPageNotFoundError', 'AmoInternalError', 'AmoObjectNotFoundError', 'AmoBadRequest',
-           'AmoUnknownError', 'AmoPaymentRequired', 'AmoForbidden']
+           'AmoUnknownError', 'AmoPaymentRequired', 'AmoForbidden', 'AmoTooManyRequests']
 
 
 class AmoAuthError(_BaseException):
@@ -18,6 +18,10 @@ class AmoForbidden(_BaseException):
 
 class AmoPageNotFoundError(_BaseException):
     message = '№404. Page not found'
+
+
+class AmoTooManyRequests(_BaseException):
+    message = '№429. Too many requests'
 
 
 class AmoInternalError(_BaseException):
