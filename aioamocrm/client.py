@@ -1,5 +1,6 @@
 from .session import Session
 from .models import *
+from .managers import *
 
 
 class Client:
@@ -12,8 +13,8 @@ class Client:
     @classmethod
     def init(cls, login: str, token: str, subdomain: str):
         cls.session = Session.init(login, token, subdomain)
-        cls.account = Account(cls.session)
-        cls.pipelines = Pipeline(cls.session)
+        cls.account = Account(manager=AccountManager(cls.session))
+        cls.pipelines = Pipeline(manager=PipelineManager(cls.session))
         return cls
 
 

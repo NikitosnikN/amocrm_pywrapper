@@ -3,7 +3,10 @@ __all__ = ['AccountManager', 'LeadManager', 'PipelineManager', 'CompanyManager',
 
 from typing import Union
 
+from pprint import pprint
+
 from .base import _BaseManager
+from .models import *
 from .utils import get_embedded_items
 
 
@@ -24,12 +27,15 @@ class LeadManager(_BaseManager):
     def fetch_all(self, payload: dict = None) -> Union[dict, None]:
         return super().fetch_all(payload)
     
-    def add(self, payload: dict = None) -> dict:
+    def add(self, leads: Union[Lead, dict, list] = None) -> dict:
+        if isinstance(leads, dict):
+            leads = Lead(**leads)
+
         return self.session.request(
             method='post',
             url=self.api_url,
             payload={
-                'add': payload
+                'add': leads if isinstance(leads, list) else [leads]
             }
         )
 
@@ -53,8 +59,10 @@ class PipelineManager(_BaseManager):
             payload={'id': _id}
         )
 
-    def fetch_all(self, payload: dict = None) -> Union[dict, None]:
-        return super().fetch_all(payload)
+    def fetch_all(self, payload: dict = None) -> Union[list, None]:
+        objects = super().fetch_all(payload)
+        pprint(objects)
+        return list(Pipeline(**obj) for obj in objects.values())
             
     def set(self, payload):
         pass

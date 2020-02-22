@@ -5,13 +5,12 @@ from datetime import datetime
 
 from .base import _BaseModel
 from .fields import CustomField
-from .managers import *
 
 
 class Account(_BaseModel):
     _subdomain: str = None
     _currency: str = None
-    _timezone: str = None # TODO type fields
+    _timezone: str = None
     _language: str = None
     _current_user: int = None
     _pipelines: list = None
@@ -20,11 +19,6 @@ class Account(_BaseModel):
     _groups: list = None
     _note_types: list = None
     _task_types: list = None
-
-    objects = NotImplemented
-
-    def __init__(self, session):
-        self.objects = AccountManager(session)
 
 
 class Company(_BaseModel):
@@ -38,19 +32,34 @@ class Contact(_BaseModel):
 class Status(_BaseModel):
     _color: str = None
     _sort: int = None
-    _is_editable: bool = None
+    is_editable: bool = None
+
+    def __repr__(self):
+        return f"Status '{self.name}'"
+
+    def __parse_from(self, **kwargs):
+        for key, val in kwargs.items():
+            setattr(self, f'_{key}', val) if hasattr(self, f'_{key}') else None
+
+    @property
+    def color(self):
+        return f"Yellow ({self._color})"
 
 
 class Pipeline(_BaseModel):
-
     _sort: int = None
     _is_main: bool = None
-    _statuses: Dict[Status] = None
+    _statuses: list = list()
 
-    objects = NotImplemented
+    def __repr__(self):
+        return f"Pipeline '{self.name}'"
 
-    def __init__(self, session):
-        self.objects = PipelineManager(session)
+    def __parse_from(self, **kwargs):
+        for key, val in kwargs.items():
+            if key == 'statuses':
+                self._statuses.extend([Status(**status) for status in val.values()])
+            else:
+                setattr(self, f'_{key}', val) if hasattr(self, f'_{key}') else None
 
 
 class Lead(_BaseModel):
@@ -71,6 +80,22 @@ class Lead(_BaseModel):
     _status_id: int = None
     _sale: int = None
     _pipeline: Pipeline = None
+
+    def __init__(self, *, manager=None, **kwargs):
+        super().__init__(manager=manager)
+
+        self.__parse_from(**kwargs) if kwargs else None
+
+    def __repr__(self):
+        return f"Lead '{self.name}'"
+
+    def __parse_from(self, **kwargs):
+        for key, val in kwargs.items():
+            if key == 'custom_fields':
+                pass
+            else:
+                setattr(self, f'_{key}', val) if hasattr(self, f'_{key}') else None
+
 
 class Customers(_BaseModel):
     pass

@@ -1,6 +1,6 @@
-from types import Union
+from typing import Union
 
-from .utils import get_embedded_items
+from .utils import get_embedded_items, raise_
 
 BASE_API_URL = 'https://{}.amocrm.ru/api/v2/{}'
 
@@ -9,6 +9,36 @@ class _BaseModel(object):
     _id: int = None
     _name: str = None
     _href: str = None
+
+    objects = NotImplemented
+
+    def __init__(self, *, manager, **kwargs):
+        self.objects = manager if manager else NotImplemented
+        self.__parse_from(**kwargs) if kwargs else None
+
+    def __repr__(self):
+        return self.__class__.__name__
+
+    def __parse_from(self, **kwargs):
+        raise NotImplementedError('__parse_from should be implemented')
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def href(self):
+        return self._href
+
+    def to_json(self):
+        return {
+            attr[1:]: getattr(self, attr)
+            for attr in [i for i in dir(self) if i[0] == '_' and not i[1] == '_' and not callable(i)]
+        }
 
 
 class _BaseField(object):
