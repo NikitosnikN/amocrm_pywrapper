@@ -5,12 +5,12 @@ from typing import Union
 import json
 from pprint import pprint
 
-from .base import _BaseManager
+from .base import BaseManager
 from .models import *
 from .utils import get_embedded_items, AmoJSONEncoder
 
 
-class AccountManager(_BaseManager):
+class AccountManager(BaseManager):
     model_name = 'account'
 
     def fetch(self, payload: dict = None) -> dict:
@@ -21,7 +21,7 @@ class AccountManager(_BaseManager):
         )
 
 
-class LeadManager(_BaseManager):
+class LeadManager(BaseManager):
     model_name = 'leads'
 
     def fetch_all(self, payload: dict = None) -> Union[dict, None]:
@@ -31,35 +31,28 @@ class LeadManager(_BaseManager):
         if isinstance(leads, dict):
             leads = Lead(**leads)
 
-        if not isinstance(leads, list):
-            leads = [leads, ]
-
         payload = json.dumps(leads, cls=AmoJSONEncoder)
 
-        return super().add({'add': payload})
+        return super().add(payload=payload)
 
     def update(self, leads: Union[Lead, dict, list] = None) -> dict:
         if isinstance(leads, dict):
             leads = Lead(**leads)
 
-        if not isinstance(leads, list):
-            leads = [leads, ]
-
         payload = json.dumps(leads, cls=AmoJSONEncoder)
 
-        return super().add({'add': payload})
+        return super().add(payload=payload)
 
 
-class PipelineManager(_BaseManager):
+class PipelineManager(BaseManager):
     model_name = 'pipelines'
 
     def fetch_all(self, payload: dict = None) -> Union[list, None]:
         objects = super().fetch_all(payload)
-        # pprint(objects)
         return list(Pipeline(**obj) for obj in objects.values())
 
 
-class StatusManager(_BaseManager):
+class StatusManager(BaseManager):
     model_name = 'pipelines'
 
     def fetch_all_from_pipeline(self, payload: dict = None) -> Union[dict, None]:
@@ -71,43 +64,47 @@ class StatusManager(_BaseManager):
         pass
 
 
-class ContactManager(_BaseManager):
+class ContactManager(BaseManager):
     model_name = 'contacts'
 
     def fetch_all(self, payload: dict = None) -> Union[dict, None]:
         return super().fetch_all(payload)
 
 
-class CompanyManager(_BaseManager):
+class CompanyManager(BaseManager):
     model_name = 'companies'
 
     def fetch_all(self, payload: dict = None) -> Union[dict, None]:
         return super().fetch_all(payload)
 
 
-class CustomersManager(_BaseManager):
+class CustomersManager(BaseManager):
     model_name = 'customers'
 
     def fetch_all(self, payload: dict = None) -> Union[dict, None]:
         return super().fetch_all(payload)
 
 
-class TasksManager(_BaseManager):
+class TasksManager(BaseManager):
     model_name = 'tasks'
 
     def fetch_all(self, payload: dict = None) -> Union[dict, None]:
         return super().fetch_all(payload)
 
 
-class NotesManager(_BaseManager):
+class NotesManager(BaseManager):
     model_name = 'notes'
 
     def fetch_all(self, payload: dict = None) -> Union[dict, None]:
         return super().fetch_all(payload)
 
 
-class FieldManager(_BaseManager):
+class FieldManager(BaseManager):
     model_name = 'fields'
+
+    def fetch_all(self, payload: dict = None): return None
+
+    def fetch_one(self, _id: int): return None
 
     def add(self):
         pass
@@ -115,8 +112,3 @@ class FieldManager(_BaseManager):
     def delete(self):
         pass
 
-    def fetch_all(self, payload: dict = None) -> Union[dict, None]:
-        return None
-
-    def fetch_one(self, _id: int) -> Union[dict, None]:
-        return None

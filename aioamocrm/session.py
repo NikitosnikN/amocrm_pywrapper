@@ -29,6 +29,14 @@ class Session:
         return cls(amo_login, amo_hash, subdomain)
 
     @property
+    def auth_url(self) -> str:
+        return "https://{}.amocrm.ru/private/api/auth.php"
+
+    @property
+    def api_url(self) -> str:
+        return f"https://{self.subdomain}.amocrm.ru/api/v2/"
+
+    @property
     def subdomain(self) -> str:
         return self._subdomain
 
@@ -40,14 +48,13 @@ class Session:
         return self._cookies
 
     def _get_cookies(self, amo_login: str, amo_hash: str, subdomain: str) -> None:
-
-        url = f"https://{subdomain}.amocrm.ru/private/api/auth.php"
-        payload = {
-            'USER_LOGIN': amo_login,
-            'USER_HASH': amo_hash,
-        }
         with Client() as session:
-            resp = session.post(url, data=payload)
+            resp = session.post(
+                self.auth_url.format(subdomain),
+                data={
+                    'USER_LOGIN': amo_login,
+                    'USER_HASH': amo_hash,
+                })
 
         if resp.status_code == 200 and 'true' in resp.text:
             self._cookies = dict(resp.cookies)

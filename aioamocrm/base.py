@@ -1,8 +1,6 @@
-from typing import Union
+from typing import Union, Any
 
 from .utils import get_embedded_items
-
-BASE_API_URL = 'https://{}.amocrm.ru/api/v2/{}'
 
 
 class BaseModel(object):
@@ -36,14 +34,18 @@ class BaseModel(object):
         return self._href
 
 
-class _BaseManager(object):
-    api_url: str = None
+class BaseManager(object):
     model_name: str = None
+    custom_api_url: str = None
     session = None
 
     def __init__(self, session):
         self.session = session
-        self.api_url = BASE_API_URL.format(session.subdomain, self.model_name)
+
+    @property
+    def api_url(self) -> str:
+        endpoint = self.custom_api_url or self.model_name
+        return self.session.api_url + endpoint
 
     def fetch_one(self, _id: int) -> Union[dict, None]:
         return self.session.request(
@@ -61,21 +63,31 @@ class _BaseManager(object):
             )
         )
 
-    def set(self):
-        pass
-
-    def add(self, payload: dict = None):
+    def add(self, payload: Any = None):
         return self.session.request(
             method='post',
             url=self.api_url,
-            payload=payload
+            payload={
+                'add': payload if isinstance(payload, (list, tuple, set)) else [payload, ]
+            }
         )
 
-    def delete(self, payload: dict = None):
+    def update(self, payload: Any = None):
         return self.session.request(
-            method='delete',
+            method='post',
             url=self.api_url,
-            payload=payload
+            payload={
+                'update': payload if isinstance(payload, (list, tuple, set)) else [payload, ]
+            }
+        )
+
+    def delete(self, payload: Any = None):
+        return self.session.request(
+            method='post',
+            url=self.api_url,
+            payload={
+                'delete': payload if isinstance(payload, (list, tuple, set)) else [payload, ]
+            }
         )
 
 
