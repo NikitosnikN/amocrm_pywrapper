@@ -2,12 +2,12 @@ __all__ = ['AccountManager', 'LeadManager', 'PipelineManager', 'CompanyManager',
            'TasksManager', 'NotesManager']
 
 from typing import Union
-
+import json
 from pprint import pprint
 
 from .base import _BaseManager
 from .models import *
-from .utils import get_embedded_items
+from .utils import get_embedded_items, AmoJSONEncoder
 
 
 class AccountManager(_BaseManager):
@@ -31,43 +31,43 @@ class LeadManager(_BaseManager):
         if isinstance(leads, dict):
             leads = Lead(**leads)
 
-        return self.session.request(
-            method='post',
-            url=self.api_url,
-            payload={
-                'add': leads if isinstance(leads, list) else [leads]
-            }
-        )
+        if not isinstance(leads, list):
+            leads = [leads, ]
 
-    def update(self, payload: dict = None) -> dict:
-        return self.session.request(
-            method='post',
-            url=self.api_url,
-            payload={
-                'update': payload
-            }
-        )
+        payload = json.dumps(leads, cls=AmoJSONEncoder)
+
+        return super().add({'add': payload})
+
+    def update(self, leads: Union[Lead, dict, list] = None) -> dict:
+        if isinstance(leads, dict):
+            leads = Lead(**leads)
+
+        if not isinstance(leads, list):
+            leads = [leads, ]
+
+        payload = json.dumps(leads, cls=AmoJSONEncoder)
+
+        return super().add({'add': payload})
 
 
 class PipelineManager(_BaseManager):
     model_name = 'pipelines'
 
-    def fetch_one(self, _id: int) -> Union[dict, None]:
-        return self.session.request(
-            method='get',
-            url=self.api_url,
-            payload={'id': _id}
-        )
-
     def fetch_all(self, payload: dict = None) -> Union[list, None]:
         objects = super().fetch_all(payload)
-        pprint(objects)
+        # pprint(objects)
         return list(Pipeline(**obj) for obj in objects.values())
-            
-    def set(self, payload):
-        pass
 
-    def delete(self, _id):
+
+class StatusManager(_BaseManager):
+    model_name = 'pipelines'
+
+    def fetch_all_from_pipeline(self, payload: dict = None) -> Union[dict, None]:
+        pipeline = super().fetch_one(_id=payload.get('pipeline_id'))
+
+        if not pipeline:
+            return None
+
         pass
 
 
@@ -104,3 +104,19 @@ class NotesManager(_BaseManager):
 
     def fetch_all(self, payload: dict = None) -> Union[dict, None]:
         return super().fetch_all(payload)
+
+
+class FieldManager(_BaseManager):
+    model_name = 'fields'
+
+    def add(self):
+        pass
+
+    def delete(self):
+        pass
+
+    def fetch_all(self, payload: dict = None) -> Union[dict, None]:
+        return None
+
+    def fetch_one(self, _id: int) -> Union[dict, None]:
+        return None

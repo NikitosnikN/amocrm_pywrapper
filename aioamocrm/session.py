@@ -1,9 +1,12 @@
-from typing import Optional, Union
+import json
+from typing import Union
 from datetime import timedelta, datetime
+from pprint import pprint
 
 from httpx import Client
 
-from .exceptions import AmoAuthError, AmoPageNotFoundError, AmoInternalError, AmoBadRequest
+from .exceptions import AmoAuthError, AmoPageNotFoundError, AmoInternalError, AmoBadRequest, AmoUnknownError
+from .utils import AmoJSONEncoder
 
 SESSION_LIFETIME = timedelta(minutes=15)
 
@@ -58,7 +61,7 @@ class Session:
             header.update(**headers)
 
         if payload:
-            payload = {'params': payload} if method.lower() == 'get' else {'json': payload}
+            payload = {'params': payload} if method.lower() == 'get' else {'data': payload}
         else:
             payload = {}
 
@@ -67,11 +70,13 @@ class Session:
 
             if resp.status_code == 200:
                 return resp.json()
+            elif resp.status_code == 400:
+                raise AmoBadRequest
             elif resp.status_code == 401:
                 raise AmoAuthError
             elif resp.status_code == 404:
-                return None
+                raise AmoPageNotFoundError
             elif resp.status_code == 500:
                 raise AmoInternalError
             else:
-                raise AmoBadRequest
+                raise AmoUnknownError

@@ -15,6 +15,7 @@ class Client:
         cls.session = Session.init(login, token, subdomain)
         cls.account = Account(manager=AccountManager(cls.session))
         cls.pipelines = Pipeline(manager=PipelineManager(cls.session))
+        cls.leads = Lead(manager=LeadManager(cls.session))
         return cls
 
 

@@ -1,4 +1,5 @@
-__all__ = ['AmoAuthError', 'AmoPageNotFoundError', 'AmoInternalError', 'AmoObjectNotFoundError', 'AmoBadRequest']
+__all__ = ['AmoAuthError', 'AmoPageNotFoundError', 'AmoInternalError', 'AmoObjectNotFoundError', 'AmoBadRequest',
+           'AmoUnknownError']
 
 from .base import _BaseException
 
@@ -33,3 +34,7 @@ class AmoWrapperHasNoPermission(_BaseException):
 
 class AmoClientHasNoPermission(_BaseException):
     pass
+
+
+class AmoUnknownError(_BaseException):
+    message = 'Unknown Error'
