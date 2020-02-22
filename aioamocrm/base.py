@@ -1,5 +1,6 @@
 from typing import Union, Any
 
+from .mixins import ElementModelMixin
 from .utils import get_embedded_items
 
 
@@ -7,6 +8,7 @@ class BaseModel(object):
     _id: int = None
     _name: str = None
     _href: str = None
+    _custom_fields: list = None
 
     objects = NotImplemented
 
@@ -63,6 +65,13 @@ class BaseManager(object):
             )
         )
 
+    def fetch_related(self, url: str, payload: dict) -> Union[dict, None]:
+        return self.session.request(
+            method='get',
+            url=url,
+            payload=payload
+        )
+
     def add(self, payload: Any = None):
         return self.session.request(
             method='post',
@@ -91,10 +100,9 @@ class BaseManager(object):
         )
 
 
-class _BaseField(BaseModel):
+class _BaseField(BaseModel, ElementModelMixin):
     _type: int = None
     _origin: str = None
-    _element_type: int = None
     _is_editable: bool = None
     _is_required: bool = None
     _is_deletable: bool = None

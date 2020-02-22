@@ -4,6 +4,7 @@ from typing import List
 from datetime import datetime
 
 from .base import BaseModel
+from .mixins import DateTimeModelMixin, ElementModelMixin, ColorMixin
 
 
 class Account(BaseModel):
@@ -14,24 +15,31 @@ class Account(BaseModel):
     _current_user: int = None
     _pipelines: list = None
     _users: list = None
-    _custom_fields: list = None
     _groups: list = None
     _note_types: list = None
     _task_types: list = None
 
 
-class Company(BaseModel):
-    pass
+class Company(BaseModel, DateTimeModelMixin):
+    _responsible_user_id: int = None
+    _created_by: int = None
+    _tags: str = None
+    _leads_id: list = None
+    _customers_id: str = None
+    _contacts_id: list = None
 
 
-class Contact(BaseModel):
-    pass
+class Contact(BaseModel, DateTimeModelMixin):
+    _responsible_user_id: int = None
+    _created_by: int = None
+    _tags: str = None
+    _leads_id: list = None
+    _company_id: int = None
 
 
-class Status(BaseModel):
-    _color: str = None
+class Status(BaseModel, ColorMixin):
     _sort: int = None
-    is_editable: bool = None
+    _is_editable: bool = None
 
     def __init__(self, *, manager=None, **kwargs):
         super().__init__(manager=manager)
@@ -52,7 +60,7 @@ class Status(BaseModel):
 class Pipeline(BaseModel):
     _sort: int = None
     _is_main: bool = None
-    _statuses: list = list()
+    _statuses: list = None
 
     def __init__(self, *, manager=None, **kwargs):
         super().__init__(manager=manager)
@@ -76,25 +84,21 @@ class Pipeline(BaseModel):
             return self._statuses
 
 
-class Lead(BaseModel):
+class Lead(BaseModel, DateTimeModelMixin):
     _responsible_user_id: int = None
     _created_by: int = None
-    _created_at: datetime = None
-    _updated_at: datetime = None
     _account_id: int = None
     _is_deleted: bool = None
     _main_contact: Contact = None
     _group_id: int = None
     _company: Company = None
-    _closed_at: int = None
+    _closed_at: datetime = None
     _closest_task_at: datetime = None
     _tags: list = None
     _contacts: List[Contact] = None
     _status_id: int = None
     _pipeline_id: int = None
     _sale: int = None
-    _pipeline: Pipeline = None
-    _custom_fields: list = None
 
     def __init__(self, *, manager=None, **kwargs):
         super().__init__(manager=manager)
@@ -116,12 +120,29 @@ class Lead(BaseModel):
 
 
 class Customers(BaseModel):
-    pass
+    _responsible_user_id: int = None
+    _created_by: int = None
+    _next_date: datetime = None
+    _next_price: int = None
+    _periodicity: int = None
+    _contacts_id: list = None
+    _company_id: int = None
+    _tags: list = None
+    _period_id: int = None
+    _catalog_elements_id: dict = None
 
 
-class Tasks(BaseModel):
-    pass
+class Tasks(BaseModel, DateTimeModelMixin, ElementModelMixin):
+    _responsible_user_id: int = None
+    _created_by: int = None
+    _complete_till_at: datetime = None
+    _task_type: int = None
+    _text: str = None
 
 
 class Notes(BaseModel):
-    pass
+    _note_type: int = None
+    _responsible_user_id: int = None
+    _created_by: int = None
+    _params: list = None
+    _text: str = None

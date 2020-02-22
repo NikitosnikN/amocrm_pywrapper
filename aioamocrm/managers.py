@@ -7,7 +7,7 @@ from pprint import pprint
 
 from .base import BaseManager
 from .models import *
-from .utils import get_embedded_items, AmoJSONEncoder
+from .utils import AmoJSONEncoder
 
 
 class AccountManager(BaseManager):
@@ -26,7 +26,7 @@ class LeadManager(BaseManager):
 
     def fetch_all(self, payload: dict = None) -> Union[dict, None]:
         return super().fetch_all(payload)
-    
+
     def add(self, leads: Union[Lead, dict, list] = None) -> dict:
         if isinstance(leads, dict):
             leads = Lead(**leads)
@@ -105,10 +105,3 @@ class FieldManager(BaseManager):
     def fetch_all(self, payload: dict = None): return None
 
     def fetch_one(self, _id: int): return None
-
-    def add(self):
-        pass
-
-    def delete(self):
-        pass
-

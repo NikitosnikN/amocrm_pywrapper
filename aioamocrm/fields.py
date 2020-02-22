@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from .base import _BaseField
 
@@ -63,3 +63,9 @@ class LegalEntityField(_BaseField):
 
 class ItemsField(_BaseField):
     _type: int = 15
+
+
+class CustomField(_BaseField):
+    _values: Union[list, int, str] = None
+    _enum: List[str] = None
+
